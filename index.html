@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClusterSure - EKS Security Posture Reviews</title>
+<meta name="description" content="Fixed-price Kubernetes security posture reviews for teams running production workloads on AWS EKS. Know exactly where you stand and what to fix first.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--paper: #f6f8f9;
+--ink: #16242e;
+--ink-soft: #46565f;
+--line: #d8e0e4;
+--pass: #0e7c5b;
+--pass-bg: #e3f2ec;
+--fail: #b13a2f;
+--fail-bg: #f8e9e7;
+--card: #ffffff;
+--accent: #0e7c5b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+background: var(--paper);
+color: var(--ink);
+font-family: "Inter", system-ui, sans-serif;
+font-size: 17px;
+line-height: 1.65;
+-webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible {
+outline: 3px solid var(--accent);
+outline-offset: 2px;
+}
+.mono { font-family: "IBM Plex Mono", monospace; }
+header.site {
+border-bottom: 1px solid var(--line);
+background: var(--paper);
+}
+header.site .wrap {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding-top: 20px;
+padding-bottom: 20px;
+}
+.logo {
+font-family: "Space Grotesk", sans-serif;
+font-weight: 700;
+font-size: 1.25rem;
+letter-spacing: -0.01em;
+color: var(--ink);
+text-decoration: none;
+}
+.logo span { color: var(--accent); }
+header.site nav a {
+color: var(--ink-soft);
+text-decoration: none;
+font-size: 0.95rem;
+margin-left: 28px;
+}
+header.site nav a:hover { color: var(--ink); }
+header.site nav a.cta-link {
+color: var(--accent);
+font-weight: 600;
+}
+.hero { padding: 88px 0 72px; }
+.hero .wrap {
+display: grid;
+grid-template-columns: 1.15fr 1fr;
+gap: 64px;
+align-items: center;
+}
+.eyebrow {
+font-family: "IBM Plex Mono", monospace;
+font-size: 0.8rem;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: var(--accent);
+margin-bottom: 18px;
+}
+h1 {
+font-family: "Space Grotesk", sans-serif;
+font-weight: 700;
+font-size: clamp(2.1rem, 4.5vw, 3.1rem);
+line-height: 1.12;
+letter-spacing: -0.02em;
+margin-bottom: 22px;
+}
+.hero p.lede {
+color: var(--ink-soft);
+font-size: 1.1rem;
+max-width: 32em;
+margin-bottom: 34px;
+}
+.btn {
+display: inline-block;
+background: var(--ink);
+color: #fff;
+text-decoration: none;
+font-weight: 600;
+font-size: 1rem;
+padding: 14px 26px;
+border-radius: 6px;
+}
+.btn:hover { background: #24363f; }
+.btn.ghost {
+background: transparent;
+color: var(--ink);
+border: 1px solid var(--line);
+margin-left: 12px;
+}
+.btn.ghost:hover { border-color: var(--ink-soft); }
+.scorecard {
+background: var(--card);
+border: 1px solid var(--line);
+border-radius: 10px;
+box-shadow: 0 8px 28px rgba(22, 36, 46, 0.07);
+overflow: hidden;
+}
+.scorecard .bar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 14px 18px;
+border-bottom: 1px solid var(--line);
+font-family: "IBM Plex Mono", monospace;
+font-size: 0.78rem;
+color: var(--ink-soft);
+}
+.scorecard .bar strong { color: var(--ink); font-weight: 500; }
+.scorecard table { width: 100%; border-collapse: collapse; }
+.scorecard td {
+padding: 12px 18px;
+border-bottom: 1px solid var(--line);
+font-size: 0.85rem;
+}
+.scorecard tr:last-child td { border-bottom: none; }
+.scorecard td.id {
+font-family: "IBM Plex Mono", monospace;
+color: var(--ink-soft);
+white-space: nowrap;
+width: 1%;
+}
+.scorecard td.desc { color: var(--ink); }
+.badge {
+font-family: "IBM Plex Mono", monospace;
+font-size: 0.72rem;
+font-weight: 500;
+padding: 3px 10px;
+border-radius: 999px;
+white-space: nowrap;
+}
+.badge.pass { background: var(--pass-bg); color: var(--pass); }
+.badge.fail { background: var(--fail-bg); color: var(--fail); }
+.scorecard .foot {
+padding: 12px 18px;
+font-size: 0.8rem;
+color: var(--ink-soft);
+font-family: "IBM Plex Mono", monospace;
+}
+section.block { padding: 72px 0; border-top: 1px solid var(--line); }
+h2 {
+font-family: "Space Grotesk", sans-serif;
+font-weight: 700;
+font-size: clamp(1.5rem, 3vw, 2rem);
+letter-spacing: -0.01em;
+margin-bottom: 20px;
+}
+.block p { color: var(--ink-soft); max-width: 42em; }
+.block p + p { margin-top: 16px; }
+.scope { margin-top: 36px; border-top: 1px solid var(--line); }
+.scope-row {
+display: grid;
+grid-template-columns: 140px 1fr;
+gap: 24px;
+padding: 22px 0;
+border-bottom: 1px solid var(--line);
+}
+.scope-row .tag {
+font-family: "IBM Plex Mono", monospace;
+font-size: 0.78rem;
+color: var(--accent);
+text-transform: uppercase;
+letter-spacing: 0.06em;
+padding-top: 3px;
+}
+.scope-row h3 {
+font-size: 1.05rem;
+font-weight: 600;
+margin-bottom: 6px;
+}
+.scope-row p { font-size: 0.95rem; max-width: 46em; }
+.deliver {
+margin-top: 40px;
+background: var(--card);
+border: 1px solid var(--line);
+border-radius: 10px;
+padding: 28px 32px;
+}
+.deliver h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 10px; }
+.deliver p { font-size: 0.98rem; }
+.cta-band { text-align: center; }
+.cta-band h2 { margin-bottom: 14px; }
+.cta-band p { margin: 0 auto 30px; }
+footer.site {
+border-top: 1px solid var(--line);
+padding: 36px 0 48px;
+font-size: 0.9rem;
+color: var(--ink-soft);
+}
+footer.site .wrap {
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+gap: 12px;
+}
+footer.site a { color: var(--ink-soft); }
+footer.site a:hover { color: var(--ink); }
+@media (max-width: 860px) {
+.hero { padding: 56px 0 48px; }
+.hero .wrap { grid-template-columns: 1fr; gap: 40px; }
+.scope-row { grid-template-columns: 1fr; gap: 6px; }
+.btn.ghost { margin-left: 0; margin-top: 12px; }
+}
+</style>
+</head>
+<body>
+<header class="site">
+<div class="wrap">
+<a class="logo" href="/">Cluster<span>Sure</span></a>
+<nav>
+<a href="#review">The review</a>
+<a href="#why">Why us</a>
+<a class="cta-link" href="mailto:ade@clustersure.com?subject=Scoping%20call">Book a scoping call</a>
+</nav>
+</div>
+</header>
+<section class="hero">
+<div class="wrap">
+<div>
+<p class="eyebrow">Kubernetes security assurance</p>
+<h1>Is your EKS cluster audit-ready?</h1>
+<p class="lede">Fixed-price security posture reviews for teams running production workloads on AWS EKS. Know exactly where you stand, and exactly what to fix first.</p>
+<a class="btn" href="mailto:ade@clustersure.com?subject=Scoping%20call">Book a scoping call</a>
+<a class="btn ghost" href="#review">See what's covered</a>
+</div>
+<div class="scorecard" aria-label="Example audit findings">
+<div class="bar"><strong>posture-review.report</strong><span>prod-eks-01</span></div>
+<table>
+<tr>
+<td class="id">CIS 5.1.5</td>
+<td class="desc">Default service accounts not actively used</td>
+<td><span class="badge pass">PASS</span></td>
+</tr>
+<tr>
+<td class="id">CIS 4.2.6</td>
+<td class="desc">Containers run with allowPrivilegeEscalation</td>
+<td><span class="badge fail">FAIL</span></td>
+</tr>
+<tr>
+<td class="id">IAM-03</td>
+<td class="desc">Node role scoped to least privilege</td>
+<td><span class="badge pass">PASS</span></td>
+</tr>
+<tr>
+<td class="id">NET-01</td>
+<td class="desc">Namespaces missing default-deny network policy</td>
+<td><span class="badge fail">FAIL</span></td>
+</tr>
+<tr>
+<td class="id">CI-04</td>
+<td class="desc">Images scanned before deploy</td>
+<td><span class="badge pass">PASS</span></td>
+</tr>
+</table>
+<div class="foot">47 controls assessed &middot; ranked by risk &middot; remediation backlog attached</div>
+</div>
+</div>
+</section>
+<section class="block">
+<div class="wrap">
+<h2>Your team ships fast. Security reviews don't.</h2>
+<p>Enterprise security tooling costs more than your entire cloud bill, and a pentest tells you about your application, not your cluster, your IAM, or your pipeline. Meanwhile SOC 2 auditors, enterprise customers, and cyber insurers are all asking the same question: can you prove your Kubernetes environment is secure?</p>
+<p>ClusterSure answers that question in two weeks, at a fixed price agreed before work starts.</p>
+</div>
+</section>
+<section class="block" id="review">
+<div class="wrap">
+<h2>EKS Security Posture Review</h2>
+<p>Fixed price. Delivered in two weeks. Everything assessed against CIS benchmarks and AWS security best practice.</p>
+<div class="scope">
+<div class="scope-row">
+<div class="tag">Cluster</div>
+<div>
+<h3>CIS Kubernetes Benchmark assessment</h3>
+<p>Your EKS clusters measured control by control against the CIS benchmark, with findings scored and ranked by real-world risk rather than checklist order.</p>
+</div>
+</div>
+<div class="scope-row">
+<div class="tag">Access</div>
+<div>
+<h3>AWS IAM and cluster RBAC audit</h3>
+<p>Who can do what, and whether they should. Node roles, IRSA, aws-auth mappings, and RBAC bindings reviewed for privilege escalation paths and least-privilege drift.</p>
+</div>
+</div>
+<div class="scope-row">
+<div class="tag">Workloads</div>
+<div>
+<h3>Workload hardening review</h3>
+<p>Pod security standards, network policies, and secrets handling across your namespaces, with concrete policy configurations for anything that falls short.</p>
+</div>
+</div>
+<div class="scope-row">
+<div class="tag">Pipeline</div>
+<div>
+<h3>CI/CD pipeline security</h3>
+<p>Image scanning coverage, infrastructure-as-code misconfiguration, and exposed credentials across your delivery pipeline, from commit to deploy.</p>
+</div>
+</div>
+</div>
+<div class="deliver">
+<h3>What you get</h3>
+<p>A scored findings report benchmarked against CIS standards, a ranked remediation backlog with effort estimates your engineers can pick up immediately, and a walkthrough call with your team. No 200-page PDF that nobody reads. Actionable findings, ordered by risk.</p>
+</div>
+</div>
+</section>
+<section class="block" id="why">
+<div class="wrap">
+<h2>Built by a practitioner, not a checklist</h2>
+<p>ClusterSure is run by an engineer who secures production EKS environments daily. AWS and Kubernetes security certified, with eight years across cloud infrastructure, DevSecOps, and compliance-driven environments. You get the person who does the work.</p>
+</div>
+</section>
+<section class="block cta-band">
+<div class="wrap">
+<h2>Two weeks from now, you could know exactly where you stand.</h2>
+<p>A scoping call takes 30 minutes and carries no obligation. We confirm scope, timeline, and a fixed price before anything starts.</p>
+<a class="btn" href="mailto:ade@clustersure.com?subject=Scoping%20call">Book a scoping call</a>
+</div>
+</section>
+<footer class="site">
+<div class="wrap">
+<div>ClusterSure &middot; Kubernetes security assurance &middot; United Kingdom</div>
+<div><a href="mailto:ade@clustersure.com">ade@clustersure.com</a></div>
+</div>
+</footer>
+</body>
+</html>
