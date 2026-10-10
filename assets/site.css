@@ -50,7 +50,7 @@ p{margin:0}
 .btn-primary:hover{background:var(--accent-ink)}
 :root[data-theme="dark"] .btn-primary{color:#06110D}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn-primary{color:#06110D}}
-.btn-ghost{border-color:var(--line);color:var(--ink)}
+.btn-ghost{border-color:var(--line);color:var(--ink);background:transparent}
 .btn-ghost:hover{border-color:var(--accent)}
 
 /* header */
@@ -201,3 +201,24 @@ footer{padding-block:40px;border-top:1px solid var(--line);color:var(--ink-3);fo
 @media (max-width:560px){.score{grid-template-columns:repeat(2,1fr)}.score div:nth-child(2){border-right:0}}
 .features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 @media (max-width:900px){.features{grid-template-columns:1fr}}
+/* contact dialogs */
+.modal{width:min(640px,calc(100vw - 32px));max-height:calc(100dvh - 32px);padding:0;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--ink);box-shadow:0 24px 64px rgba(15,23,32,.28)}
+.modal::backdrop{background:rgba(15,23,32,.55)}
+.modal-body{position:relative;display:grid;gap:16px;padding:32px}
+@media (max-width:560px){.modal-body{padding:24px 20px}}
+.modal h2{font-size:1.6rem;padding-right:40px}
+.modal p{margin:0}
+.modal-lede{color:var(--ink-2)}
+.modal-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border:0;border-radius:999px;background:none;color:var(--ink-2);font-size:1.6rem;line-height:1;cursor:pointer}
+.modal-close:hover{background:var(--band);color:var(--ink)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.field-row{grid-template-columns:1fr}}
+.field{display:grid;gap:6px;min-width:0;font-weight:600;font-size:.92rem}
+.field em{font-style:normal;font-weight:400;color:var(--ink-3)}
+.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font:400 1rem/1.4 var(--f-body)}
+.field textarea{resize:vertical;min-height:96px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.modal-actions{display:flex;flex-wrap:wrap;gap:12px}
+.modal-status{min-height:1.2em;color:var(--accent-ink);font-weight:600;font-size:.92rem}
+.modal-status:empty{display:none}
+.modal-note{color:var(--ink-3);font-size:.85rem}

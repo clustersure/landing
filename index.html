@@ -38,7 +38,7 @@
       <li><a href="#about">About</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
-    <a class="btn btn-primary" href="#contact">Book a scoping call</a>
+    <a class="btn btn-primary" href="#contact" data-book>Book a scoping call</a>
   </div>
 </header>
 
@@ -50,7 +50,7 @@
         <h1>Is your EKS cluster audit-ready?</h1>
         <p class="lede">Fixed-price security reviews for teams running production workloads on AWS EKS. Find out where you stand, what to fix first, and how to prove it to auditors, customers and insurers.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#contact">Book a scoping call</a>
+          <a class="btn btn-primary" href="#contact" data-book>Book a scoping call</a>
           <a class="btn btn-ghost" href="#engage">Ways to work with us</a>
         </div>
       </div>
@@ -310,7 +310,7 @@ spec:
           <span class="mail-addr" id="mail-addr">ade@clustersure.com</span>
           <button class="copy" type="button" id="copy-mail">Copy</button>
         </div>
-        <a class="btn btn-primary" href="mailto:ade@clustersure.com?subject=ClusterSure%3A%20scoping%20call" data-topic="Scoping call" style="justify-self:start">Email to book</a>
+        <a class="btn btn-primary" href="mailto:ade@clustersure.com?subject=ClusterSure%3A%20scoping%20call" data-book style="justify-self:start">Email to book</a>
         <small>Replies within one working day. Based in the United Kingdom.</small>
       </div>
     </div>
@@ -342,7 +342,74 @@ spec:
   </div>
 </footer>
 
-<script src="/assets/discuss.js" defer></script>
+<dialog class="modal" id="discuss-dialog" aria-labelledby="discuss-title">
+  <form class="modal-body" id="discuss-form" novalidate>
+    <button class="modal-close" type="button" data-close aria-label="Close">&times;</button>
+    <h2 id="discuss-title">Discuss your environment</h2>
+    <p class="modal-lede">Tell us where you are and what you need. We reply within one working day, and confirm scope and a fixed price before any work starts.</p>
+    <div class="field-row">
+      <label class="field"><span>Your name</span><input name="name" autocomplete="name" required></label>
+      <label class="field"><span>Work email</span><input name="email" type="email" autocomplete="email" placeholder="you@company.com" required></label>
+    </div>
+    <div class="field-row">
+      <label class="field"><span>Company</span><input name="company" autocomplete="organization" required></label>
+      <label class="field"><span>Your role <em>(optional)</em></span><input name="role" autocomplete="organization-title"></label>
+    </div>
+    <label class="field"><span>What do you need help with?</span>
+      <select name="service">
+        <option>Not sure yet</option>
+        <option>EKS security posture review</option>
+        <option>IAM and RBAC audit</option>
+        <option>Infrastructure hardening</option>
+        <option>Pipeline security</option>
+        <option>Audit evidence automation</option>
+        <option>Audit-ready landing zone</option>
+        <option>Remediation sprint</option>
+        <option>Ongoing assurance retainer</option>
+      </select>
+    </label>
+    <div class="field-row">
+      <label class="field"><span>EKS clusters / AWS accounts <em>(optional)</em></span><input name="scale" placeholder="e.g. 3 clusters, 6 accounts"></label>
+      <label class="field"><span>Frameworks or audits <em>(optional)</em></span><input name="frameworks" placeholder="e.g. DSPT, ISO 27001, SOC 2"></label>
+    </div>
+    <label class="field"><span>When do you need it?</span>
+      <select name="timing">
+        <option>Not sure yet</option>
+        <option>As soon as possible</option>
+        <option>Within a month</option>
+        <option>In 1 to 3 months</option>
+        <option>In 3 to 6 months</option>
+        <option>Just exploring</option>
+      </select>
+    </label>
+    <label class="field"><span>What prompted this now?</span><textarea name="message" rows="4" placeholder="An upcoming audit, a customer security questionnaire, a recent incident or a new platform build." required></textarea></label>
+    <div class="modal-actions">
+      <button class="btn btn-primary" type="submit">Open in email app</button>
+      <button class="btn btn-ghost" type="button" data-copy-message>Copy message</button>
+    </div>
+    <p class="modal-status" role="status" aria-live="polite"></p>
+    <p class="modal-note">Nothing is sent from this page. Your email app opens with the message ready to review. If it does not open, use Copy message and send it to <a href="mailto:ade@clustersure.com">ade@clustersure.com</a>.</p>
+  </form>
+</dialog>
+
+<dialog class="modal" id="book-dialog" aria-labelledby="book-title">
+  <div class="modal-body">
+    <button class="modal-close" type="button" data-close aria-label="Close">&times;</button>
+    <h2 id="book-title">Book a scoping call</h2>
+    <p class="modal-lede">30 minutes, no obligation. We confirm clusters, accounts and the frameworks you care about, then send a fixed-price proposal.</p>
+    <p>Email a few times that suit you, with your time zone, and we will reply within one working day to confirm.</p>
+    <div class="mail-row">
+      <span class="mail-addr">ade@clustersure.com</span>
+      <button class="copy" type="button" data-copy-address>Copy</button>
+    </div>
+    <div class="modal-actions">
+      <a class="btn btn-primary" id="book-mailto" href="mailto:ade@clustersure.com?subject=ClusterSure%3A%20scoping%20call">Email to book</a>
+      <button class="btn btn-ghost" type="button" data-switch-form>Tell us about your environment first</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="/assets/contact.js" defer></script>
 <script src="/assets/copy-mail.js" defer></script>
 </body>
 </html>
