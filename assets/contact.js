@@ -31,8 +31,7 @@
   }
 
   function subject() {
-    var company = value("company");
-    return "ClusterSure: " + value("service") + (company ? " for " + company : "");
+    return "ClusterSure: " + value("service") + " (" + value("name") + ")";
   }
 
   function body() {
@@ -41,14 +40,12 @@
       "",
       "I'd like to talk about: " + value("service"),
       "",
-      "Name: " + value("name"),
-      "Email: " + value("email"),
-      "Company: " + value("company")
+      "What I want to secure or improve:",
+      value("message"),
+      ""
     ];
-    if (value("role")) lines.push("Role: " + value("role"));
-    if (value("scale")) lines.push("EKS clusters / AWS accounts: " + value("scale"));
-    if (value("frameworks")) lines.push("Frameworks or audits: " + value("frameworks"));
-    lines.push("Timing: " + value("timing"), "", "What prompted this now:", value("message"), "", "Thanks,", value("name"));
+    if (value("website")) lines.push("Company website: " + value("website"));
+    lines.push("When I want to start: " + value("timing"), "Budget: " + value("budget"), "", "Thanks,", value("name"), value("email"));
     return lines.join("\n");
   }
 
