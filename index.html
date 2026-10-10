@@ -1,358 +1,348 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClusterSure - EKS Security Posture Reviews</title>
-<meta name="description" content="Fixed-price Kubernetes security posture reviews for teams running production workloads on AWS EKS. Know exactly where you stand and what to fix first.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ClusterSure | Kubernetes security assurance for AWS EKS</title>
+<meta name="description" content="Fixed-price Kubernetes and AWS security reviews for teams running production workloads on EKS. Know where you stand, what to fix first, and how to prove it to auditors.">
+<meta name="theme-color" content="#0F1720">
+<meta property="og:title" content="ClusterSure | Kubernetes security assurance for AWS EKS">
+<meta property="og:description" content="Fixed-price EKS security posture reviews, hardening and audit evidence for UK teams.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://clustersure.com/">
+<link rel="canonical" href="https://clustersure.com/">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<style>
-:root {
---paper: #f6f8f9;
---ink: #16242e;
---ink-soft: #46565f;
---line: #d8e0e4;
---pass: #0e7c5b;
---pass-bg: #e3f2ec;
---fail: #b13a2f;
---fail-bg: #f8e9e7;
---card: #ffffff;
---accent: #0e7c5b;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body {
-background: var(--paper);
-color: var(--ink);
-font-family: "Inter", system-ui, sans-serif;
-font-size: 17px;
-line-height: 1.65;
--webkit-font-smoothing: antialiased;
-}
-.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
-a { color: var(--accent); }
-a:focus-visible, button:focus-visible {
-outline: 3px solid var(--accent);
-outline-offset: 2px;
-}
-.mono { font-family: "IBM Plex Mono", monospace; }
-header.site {
-border-bottom: 1px solid var(--line);
-background: var(--paper);
-}
-header.site .wrap {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding-top: 20px;
-padding-bottom: 20px;
-}
-.logo {
-display: inline-flex;
-align-items: center;
-gap: 9px;
-font-family: "Space Grotesk", sans-serif;
-font-weight: 700;
-font-size: 1.25rem;
-letter-spacing: -0.01em;
-color: var(--ink);
-text-decoration: none;
-}
-.logo .wordmark span { color: var(--accent); }
-header.site nav a {
-color: var(--ink-soft);
-text-decoration: none;
-font-size: 0.95rem;
-margin-left: 28px;
-}
-header.site nav a:hover { color: var(--ink); }
-header.site nav a.cta-link {
-color: var(--accent);
-font-weight: 600;
-}
-.hero { padding: 88px 0 72px; }
-.hero .wrap {
-display: grid;
-grid-template-columns: 1.15fr 1fr;
-gap: 64px;
-align-items: center;
-}
-.eyebrow {
-font-family: "IBM Plex Mono", monospace;
-font-size: 0.8rem;
-letter-spacing: 0.08em;
-text-transform: uppercase;
-color: var(--accent);
-margin-bottom: 18px;
-}
-h1 {
-font-family: "Space Grotesk", sans-serif;
-font-weight: 700;
-font-size: clamp(2.1rem, 4.5vw, 3.1rem);
-line-height: 1.12;
-letter-spacing: -0.02em;
-margin-bottom: 22px;
-}
-.hero p.lede {
-color: var(--ink-soft);
-font-size: 1.1rem;
-max-width: 32em;
-margin-bottom: 34px;
-}
-.btn {
-display: inline-block;
-background: var(--ink);
-color: #fff;
-text-decoration: none;
-font-weight: 600;
-font-size: 1rem;
-padding: 14px 26px;
-border-radius: 6px;
-}
-.btn:hover { background: #24363f; }
-.btn.ghost {
-background: transparent;
-color: var(--ink);
-border: 1px solid var(--line);
-margin-left: 12px;
-}
-.btn.ghost:hover { border-color: var(--ink-soft); }
-.scorecard {
-background: var(--card);
-border: 1px solid var(--line);
-border-radius: 10px;
-box-shadow: 0 8px 28px rgba(22, 36, 46, 0.07);
-overflow: hidden;
-}
-.scorecard .bar {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 14px 18px;
-border-bottom: 1px solid var(--line);
-font-family: "IBM Plex Mono", monospace;
-font-size: 0.78rem;
-color: var(--ink-soft);
-}
-.scorecard .bar strong { color: var(--ink); font-weight: 500; }
-.scorecard table { width: 100%; border-collapse: collapse; }
-.scorecard td {
-padding: 12px 18px;
-border-bottom: 1px solid var(--line);
-font-size: 0.85rem;
-}
-.scorecard tr:last-child td { border-bottom: none; }
-.scorecard td.id {
-font-family: "IBM Plex Mono", monospace;
-color: var(--ink-soft);
-white-space: nowrap;
-width: 1%;
-}
-.scorecard td.desc { color: var(--ink); }
-.badge {
-font-family: "IBM Plex Mono", monospace;
-font-size: 0.72rem;
-font-weight: 500;
-padding: 3px 10px;
-border-radius: 999px;
-white-space: nowrap;
-}
-.badge.pass { background: var(--pass-bg); color: var(--pass); }
-.badge.fail { background: var(--fail-bg); color: var(--fail); }
-.scorecard .foot {
-padding: 12px 18px;
-font-size: 0.8rem;
-color: var(--ink-soft);
-font-family: "IBM Plex Mono", monospace;
-}
-section.block { padding: 72px 0; border-top: 1px solid var(--line); }
-h2 {
-font-family: "Space Grotesk", sans-serif;
-font-weight: 700;
-font-size: clamp(1.5rem, 3vw, 2rem);
-letter-spacing: -0.01em;
-margin-bottom: 20px;
-}
-.block p { color: var(--ink-soft); max-width: 42em; }
-.block p + p { margin-top: 16px; }
-.scope { margin-top: 36px; border-top: 1px solid var(--line); }
-.scope-row {
-display: grid;
-grid-template-columns: 140px 1fr;
-gap: 24px;
-padding: 22px 0;
-border-bottom: 1px solid var(--line);
-}
-.scope-row .tag {
-font-family: "IBM Plex Mono", monospace;
-font-size: 0.78rem;
-color: var(--accent);
-text-transform: uppercase;
-letter-spacing: 0.06em;
-padding-top: 3px;
-}
-.scope-row h3 {
-font-size: 1.05rem;
-font-weight: 600;
-margin-bottom: 6px;
-}
-.scope-row p { font-size: 0.95rem; max-width: 46em; }
-.deliver {
-margin-top: 40px;
-background: var(--card);
-border: 1px solid var(--line);
-border-radius: 10px;
-padding: 28px 32px;
-}
-.deliver h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 10px; }
-.deliver p { font-size: 0.98rem; }
-.cta-band { text-align: center; }
-.cta-band h2 { margin-bottom: 14px; }
-.cta-band p { margin: 0 auto 30px; }
-footer.site {
-border-top: 1px solid var(--line);
-padding: 36px 0 48px;
-font-size: 0.9rem;
-color: var(--ink-soft);
-}
-footer.site .wrap {
-display: flex;
-justify-content: space-between;
-flex-wrap: wrap;
-gap: 12px;
-}
-footer.site a { color: var(--ink-soft); }
-footer.site a:hover { color: var(--ink); }
-@media (max-width: 860px) {
-.hero { padding: 56px 0 48px; }
-.hero .wrap { grid-template-columns: 1fr; gap: 40px; }
-.scope-row { grid-template-columns: 1fr; gap: 6px; }
-.btn.ghost { margin-left: 0; margin-top: 12px; }
-}
-</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
+
 <header class="site">
-<div class="wrap">
-<a class="logo" href="/"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><circle cx="22" cy="20" r="7" fill="#16242e"/><circle cx="40" cy="14" r="5" fill="#16242e"/><circle cx="52" cy="27" r="6" fill="#16242e"/><circle cx="16" cy="38" r="5" fill="#16242e"/><circle cx="49" cy="45" r="4.5" fill="#16242e"/><circle cx="33" cy="37" r="12" fill="#0e7c5b"/><path d="M27 37 L31.5 41.5 L39.5 31.5" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="wordmark">Cluster<span>Sure</span></span></a>
-<nav>
-<a href="#review">The review</a>
-<a href="#why">Why us</a>
-<a class="cta-link" href="mailto:ade@clustersure.com?subject=Scoping%20call">Book a scoping call</a>
-</nav>
-</div>
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="ClusterSure home">
+      <svg viewBox="52 46 162 148" aria-hidden="true">
+        <g class="logo-node"><circle cx="96" cy="88" r="22"/><circle cx="153" cy="69" r="15"/><circle cx="192" cy="111" r="18"/><circle cx="76" cy="147" r="16"/><circle cx="182" cy="169" r="14"/></g>
+        <circle cx="131" cy="143" r="38" fill="#12805C"/>
+        <path d="M112 145 l13 13 l25 -27" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      ClusterSure
+    </a>
+    <ul>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#engage">Ways to work</a></li>
+      <li><a href="#deliverables">What you get</a></li>
+      <li><a href="#process">How it works</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="btn btn-primary" href="#contact">Book a scoping call</a>
+  </div>
 </header>
-<section class="hero">
-<div class="wrap">
-<div>
-<p class="eyebrow">Kubernetes security assurance</p>
-<h1>Is your EKS cluster audit-ready?</h1>
-<p class="lede">Fixed-price security posture reviews for teams running production workloads on AWS EKS. Know exactly where you stand, and exactly what to fix first.</p>
-<a class="btn" href="mailto:ade@clustersure.com?subject=Scoping%20call">Book a scoping call</a>
-<a class="btn ghost" href="#review">See what's covered</a>
-</div>
-<div class="scorecard" aria-label="Example audit findings">
-<div class="bar"><strong>posture-review.report</strong><span>prod-eks-01</span></div>
-<table>
-<tr>
-<td class="id">CIS 5.1.5</td>
-<td class="desc">Default service accounts not actively used</td>
-<td><span class="badge pass">PASS</span></td>
-</tr>
-<tr>
-<td class="id">CIS 4.2.6</td>
-<td class="desc">Containers run with allowPrivilegeEscalation</td>
-<td><span class="badge fail">FAIL</span></td>
-</tr>
-<tr>
-<td class="id">IAM-03</td>
-<td class="desc">Node role scoped to least privilege</td>
-<td><span class="badge pass">PASS</span></td>
-</tr>
-<tr>
-<td class="id">NET-01</td>
-<td class="desc">Namespaces missing default-deny network policy</td>
-<td><span class="badge fail">FAIL</span></td>
-</tr>
-<tr>
-<td class="id">CI-04</td>
-<td class="desc">Images scanned before deploy</td>
-<td><span class="badge pass">PASS</span></td>
-</tr>
-</table>
-<div class="foot">47 controls assessed &middot; ranked by risk &middot; remediation backlog attached</div>
-</div>
-</div>
-</section>
-<section class="block">
-<div class="wrap">
-<h2>Your team ships fast. Security reviews don't.</h2>
-<p>Enterprise security tooling costs more than your entire cloud bill, and a pentest tells you about your application, not your cluster, your IAM, or your pipeline. Meanwhile SOC 2 auditors, enterprise customers, and cyber insurers are all asking the same question: can you prove your Kubernetes environment is secure?</p>
-<p>ClusterSure answers that question in two weeks, at a fixed price agreed before work starts.</p>
-</div>
-</section>
-<section class="block" id="review">
-<div class="wrap">
-<h2>EKS Security Posture Review</h2>
-<p>Fixed price. Delivered in two weeks. Everything assessed against CIS benchmarks and AWS security best practice.</p>
-<div class="scope">
-<div class="scope-row">
-<div class="tag">Cluster</div>
-<div>
-<h3>CIS Kubernetes Benchmark assessment</h3>
-<p>Your EKS clusters measured control by control against the CIS benchmark, with findings scored and ranked by real-world risk rather than checklist order.</p>
-</div>
-</div>
-<div class="scope-row">
-<div class="tag">Access</div>
-<div>
-<h3>AWS IAM and cluster RBAC audit</h3>
-<p>Who can do what, and whether they should. Node roles, IRSA, aws-auth mappings, and RBAC bindings reviewed for privilege escalation paths and least-privilege drift.</p>
-</div>
-</div>
-<div class="scope-row">
-<div class="tag">Workloads</div>
-<div>
-<h3>Workload hardening review</h3>
-<p>Pod security standards, network policies, and secrets handling across your namespaces, with concrete policy configurations for anything that falls short.</p>
-</div>
-</div>
-<div class="scope-row">
-<div class="tag">Pipeline</div>
-<div>
-<h3>CI/CD pipeline security</h3>
-<p>Image scanning coverage, infrastructure-as-code misconfiguration, and exposed credentials across your delivery pipeline, from commit to deploy.</p>
-</div>
-</div>
-</div>
-<div class="deliver">
-<h3>What you get</h3>
-<p>A scored findings report benchmarked against CIS standards, a ranked remediation backlog with effort estimates your engineers can pick up immediately, and a walkthrough call with your team. No 200-page PDF that nobody reads. Actionable findings, ordered by risk.</p>
-</div>
-</div>
-</section>
-<section class="block" id="why">
-<div class="wrap">
-<h2>Built by a practitioner, not a checklist</h2>
-<p>ClusterSure is run by an engineer who secures production EKS environments daily. AWS and Kubernetes security certified, with eight years across cloud infrastructure, DevSecOps, and compliance-driven environments. You get the person who does the work.</p>
-</div>
-</section>
-<section class="block cta-band">
-<div class="wrap">
-<h2>Two weeks from now, you could know exactly where you stand.</h2>
-<p>A scoping call takes 30 minutes and carries no obligation. We confirm scope, timeline, and a fixed price before anything starts.</p>
-<a class="btn" href="mailto:ade@clustersure.com?subject=Scoping%20call">Book a scoping call</a>
-</div>
-</section>
-<footer class="site">
-<div class="wrap">
-<div>ClusterSure &middot; Kubernetes security assurance &middot; United Kingdom</div>
-<div><a href="mailto:ade@clustersure.com">ade@clustersure.com</a></div>
-</div>
+
+<main id="main">
+  <div id="top" class="wrap hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Kubernetes security assurance for AWS EKS</span>
+        <h1>Is your EKS cluster audit-ready?</h1>
+        <p class="lede">Fixed-price security reviews for teams running production workloads on AWS EKS. Find out where you stand, what to fix first, and how to prove it to auditors, customers and insurers.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contact">Book a scoping call</a>
+          <a class="btn btn-ghost" href="#engage">Ways to work with us</a>
+        </div>
+      </div>
+
+      <figure class="report" aria-label="Sample posture review output" style="margin:0">
+        <div class="report-bar"><b>posture-review.report</b><span>prod-eks-01 · eu-west-2</span></div>
+        <div class="report-scroll">
+          <table>
+            <tbody>
+              <tr><td>CIS 5.1.5</td><td>Default service accounts not actively used</td><td><span class="tag pass">PASS</span></td></tr>
+              <tr><td>CIS 4.2.6</td><td>Containers run with allowPrivilegeEscalation</td><td><span class="tag fail">FAIL</span></td></tr>
+              <tr><td>IAM-03</td><td>Node role scoped to least privilege</td><td><span class="tag pass">PASS</span></td></tr>
+              <tr><td>NET-01</td><td>Namespaces missing default-deny network policy</td><td><span class="tag fail">FAIL</span></td></tr>
+              <tr><td>SEC-02</td><td>Secrets encrypted with customer-managed KMS key</td><td><span class="tag warn">PARTIAL</span></td></tr>
+              <tr><td>CI-04</td><td>Images scanned before deploy</td><td><span class="tag pass">PASS</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="report-foot"><span>47 controls assessed · ranked by risk</span><span>remediation backlog attached</span></div>
+      </figure>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><strong>2 weeks</strong><span>From kick-off to findings walkthrough</span></div>
+      <div class="fact"><strong>Fixed price</strong><span>Agreed in writing before work starts</span></div>
+      <div class="fact"><strong>47 controls</strong><span>Cluster, IAM, workloads and pipeline</span></div>
+      <div class="fact"><strong>Read-only</strong><span>We never need write access to assess</span></div>
+    </div>
+  </div>
+
+  <section class="band" aria-labelledby="stack-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Standards and tooling</span>
+        <h2 id="stack-h">What we assess against, and what we use</h2>
+      </div>
+      <div class="stack-group"><h3>Frameworks</h3><ul class="stack"><li>CIS Kubernetes Benchmark</li><li>CIS Amazon EKS Benchmark</li><li>CIS AWS Foundations</li><li>AWS Well-Architected Security</li><li>NHS DSPT</li><li>Cyber Essentials</li><li>ISO 27001</li><li>SOC 2</li></ul></div>
+      <div class="stack-group"><h3>Platform</h3><ul class="stack"><li>AWS EKS</li><li>IAM and IRSA</li><li>EKS Pod Identity</li><li>KMS</li><li>GuardDuty</li><li>Security Hub</li><li>Terraform</li><li>Argo CD</li></ul></div>
+      <div class="stack-group"><h3>Policy and scanning</h3><ul class="stack"><li>Kyverno</li><li>OPA Gatekeeper</li><li>kube-bench</li><li>Prowler</li><li>Trivy</li><li>Checkov</li><li>Gitleaks</li><li>Semgrep</li></ul></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="problem-h">
+    <div class="wrap problem">
+      <div class="sec-head" style="margin:0">
+        <span class="eyebrow">The problem</span>
+        <h2 id="problem-h">Your team ships fast. Security reviews don't.</h2>
+      </div>
+      <div class="body">
+        <p>Enterprise security tooling can cost more than your cloud bill, and a pentest tells you about your application, not your cluster, your IAM or your pipeline.</p>
+        <p>Meanwhile auditors, NHS and enterprise customers, and cyber insurers are all asking the same question: can you show that your Kubernetes environment is secure?</p>
+        <p>ClusterSure answers that in two weeks, at a fixed price agreed before work starts.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="band" aria-labelledby="services-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Services</span>
+        <h2 id="services-h">Where we can help</h2>
+        <p class="lede">Pick the area closest to your problem. Each card lists what the work usually covers; your proposal sets the actual scope.</p>
+      </div>
+      <div class="cards">
+        <article class="card flag">
+          <span class="phase">Assess</span>
+          <h3>EKS security posture review</h3>
+          <p class="q">Where do we actually stand today?</p>
+          <p class="d">Your clusters and AWS account measured control by control, with findings ranked by real-world risk.</p>
+          <ul><li>CIS Kubernetes and EKS benchmark assessment</li><li>Workload hardening and Pod Security Standards</li><li>Network policy and secrets handling</li><li>Scored report and remediation backlog</li></ul>
+          <a class="discuss" href="#contact" data-topic="EKS security posture review">Discuss this</a>
+        </article>
+        <article class="card">
+          <span class="phase">Assess</span>
+          <h3>IAM and RBAC audit</h3>
+          <p class="q">Who can reach production, and should they?</p>
+          <p class="d">Access paths traced from AWS identity down to Kubernetes permissions.</p>
+          <ul><li>Node roles, IRSA and Pod Identity</li><li>aws-auth and access entry mappings</li><li>RBAC bindings and escalation paths</li><li>Least-privilege drift</li></ul>
+          <a class="discuss" href="#contact" data-topic="IAM and RBAC audit">Discuss this</a>
+        </article>
+        <article class="card">
+          <span class="phase">Harden</span>
+          <h3>Infrastructure hardening</h3>
+          <p class="q">How do we fix it so it stays fixed?</p>
+          <p class="d">Findings turned into code your team owns, with guardrails that stop regressions.</p>
+          <ul><li>Terraform changes for IAM, KMS and networking</li><li>Kyverno or OPA Gatekeeper policies</li><li>CIS-aligned node and cluster settings</li><li>Admission control in audit, then enforce</li></ul>
+          <a class="discuss" href="#contact" data-topic="Infrastructure hardening">Discuss this</a>
+        </article>
+        <article class="card">
+          <span class="phase">Harden</span>
+          <h3>Pipeline security</h3>
+          <p class="q">What could reach production without anyone checking?</p>
+          <p class="d">Security checks built into everyday delivery, with clear build gates.</p>
+          <ul><li>Secret detection and dependency scanning</li><li>Container and IaC scanning</li><li>SAST and DAST where they add value</li><li>Signed, pinned images</li></ul>
+          <a class="discuss" href="#contact" data-topic="Pipeline security">Discuss this</a>
+        </article>
+        <article class="card">
+          <span class="phase">Prove</span>
+          <h3>Audit evidence automation</h3>
+          <p class="q">Can you hand an auditor evidence in an afternoon?</p>
+          <p class="d">Evidence collected automatically and mapped to the framework outcomes you report against.</p>
+          <ul><li>Control-to-evidence mapping</li><li>Scheduled scans with stored results</li><li>DSPT, ISO 27001 and SOC 2 mappings</li><li>Answers for customer security questionnaires</li></ul>
+          <a class="discuss" href="#contact" data-topic="Audit evidence automation">Discuss this</a>
+        </article>
+        <article class="card">
+          <span class="phase">Build</span>
+          <h3>Audit-ready landing zone</h3>
+          <p class="q">Starting fresh, or restructuring accounts?</p>
+          <p class="d">An AWS and EKS foundation designed to pass an audit from day one.</p>
+          <ul><li>Multi-account structure and guardrails</li><li>Centralised logging and detection</li><li>EKS baseline with policy as code</li><li>Documentation for your auditors</li></ul>
+          <a class="discuss" href="#contact" data-topic="Audit-ready landing zone">Discuss this</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="engage" aria-labelledby="engage-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Ways to work</span>
+        <h2 id="engage-h">Four common starting points</h2>
+        <p class="lede">If yours is different, pick the closest one and tell us more on the call.</p>
+      </div>
+      <div class="engage">
+        <article class="card">
+          <h3>Posture review</h3>
+          <dl>
+            <div><dt>Suits</dt><dd>Teams facing an audit, a large customer's security questionnaire or a funding round who need an outside view.</dd></div>
+            <div><dt>You get</dt><dd>Scored findings against CIS and AWS best practice, a ranked remediation backlog and a walkthrough with your engineers.</dd></div>
+            <div><dt>Shape</dt><dd>Fixed price, two weeks.</dd></div>
+          </dl>
+          <a class="discuss" href="#contact" data-topic="Posture review">Discuss a review</a>
+        </article>
+        <article class="card">
+          <h3>Remediation sprint</h3>
+          <dl>
+            <div><dt>Suits</dt><dd>Teams with findings, from us or anyone else, and no spare capacity to close them.</dd></div>
+            <div><dt>You get</dt><dd>Fixes delivered as pull requests to your repositories, policies rolled out safely and a before-and-after score.</dd></div>
+            <div><dt>Shape</dt><dd>Scoped from the backlog, delivered in milestones.</dd></div>
+          </dl>
+          <a class="discuss" href="#contact" data-topic="Remediation sprint">Discuss remediation</a>
+        </article>
+        <article class="card">
+          <h3>Audit-ready landing zone</h3>
+          <dl>
+            <div><dt>Suits</dt><dd>Teams building a new AWS environment or restructuring an old one.</dd></div>
+            <div><dt>You get</dt><dd>Terraform for accounts, networking, logging and an EKS baseline, with documentation your auditors can follow.</dd></div>
+            <div><dt>Shape</dt><dd>Written proposal with milestones.</dd></div>
+          </dl>
+          <a class="discuss" href="#contact" data-topic="Audit-ready landing zone build">Discuss a build</a>
+        </article>
+        <article class="card">
+          <h3>Ongoing assurance</h3>
+          <dl>
+            <div><dt>Suits</dt><dd>Teams without in-house security engineering who need to stay compliant as they ship.</dd></div>
+            <div><dt>You get</dt><dd>Scheduled reassessments, drift alerts, evidence refreshes and a set number of engineering days each month.</dd></div>
+            <div><dt>Shape</dt><dd>Monthly retainer.</dd></div>
+          </dl>
+          <a class="discuss" href="#contact" data-topic="Ongoing assurance retainer">Discuss a retainer</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="deliverables" aria-labelledby="deliver-h">
+    <div class="wrap deliver">
+      <div>
+        <div class="sec-head">
+          <span class="eyebrow">What you get</span>
+          <h2 id="deliver-h">Findings your engineers can pick up on Monday</h2>
+          <p class="lede">No 200-page PDF that nobody reads. Every finding comes with the evidence, the risk and the fix.</p>
+        </div>
+        <ul class="deliver-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><p><strong>Scored findings report</strong>Each control marked pass, fail or partial, benchmarked against CIS and mapped to the frameworks you report on.</p></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><p><strong>Ranked remediation backlog</strong>Ordered by risk, with effort estimates, ready to import into Jira or GitHub Issues.</p></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><p><strong>Fix configurations</strong>Concrete policy, Terraform and manifest changes for each failing control.</p></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 6"/></svg><p><strong>Walkthrough call</strong>We go through the results with your team and agree what to tackle first.</p></li>
+        </ul>
+      </div>
+
+      <article class="finding" aria-label="Sample finding">
+        <div class="finding-head"><code>NET-01 · Default-deny network policy</code><span class="sev">High</span></div>
+        <div class="finding-body">
+          <div><h4>Observed</h4><p>6 of 9 application namespaces have no NetworkPolicy. Any pod can reach any other pod, including the payments service.</p></div>
+          <div><h4>Why it matters</h4><p>One compromised workload can move laterally across the cluster. Auditors treat this as a segmentation gap.</p></div>
+          <div><h4>Fix</h4>
+<pre><span class="c"># apply per namespace, then allow known flows</span>
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: payments
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]</pre>
+          </div>
+          <div><h4>Maps to</h4><p>CIS Kubernetes 5.3.2 · ISO 27001:2022 A.8.22</p></div>
+        </div>
+        <p class="sample-note">Illustrative example of the report format, not client data.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="process" aria-labelledby="process-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How it works</span>
+        <h2 id="process-h">From first call to findings in two weeks</h2>
+      </div>
+      <ol class="steps">
+        <li><h3>Scoping call</h3><span class="when">Day 0 · 30 minutes</span><p>We confirm clusters, accounts and the frameworks you care about, then send a fixed-price proposal.</p></li>
+        <li><h3>Read-only access</h3><span class="when">Day 1</span><p>You create a scoped, read-only IAM role from a template we provide. Nothing is installed in your clusters without agreement.</p></li>
+        <li><h3>Assessment</h3><span class="when">Days 2 to 7</span><p>Automated scans plus manual review of IAM, RBAC, workloads, networking and your delivery pipeline.</p></li>
+        <li><h3>Report</h3><span class="when">Days 8 to 9</span><p>Findings scored, ranked and mapped, with fix configurations for each failing control.</p></li>
+        <li><h3>Walkthrough</h3><span class="when">Day 10</span><p>We go through the results with your engineers and agree priorities. Access is then revoked.</p></li>
+        <li><h3>Optional follow-on</h3><span class="when">After</span><p>A remediation sprint, a retest, or ongoing assurance. Entirely your choice.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="about" class="band" aria-labelledby="about-h">
+    <div class="wrap about">
+      <div class="body">
+        <span class="eyebrow">About</span>
+        <h2 id="about-h" style="color:var(--ink)">Built by a practitioner, not a checklist</h2>
+        <p>ClusterSure is run by an engineer who secures production EKS environments every day, with eight years across cloud infrastructure, DevSecOps and compliance-driven environments, including regulated industries.</p>
+        <p>You work directly with the person doing the assessment. No hand-off to a junior team, no account manager in the middle.</p>
+      </div>
+      <ul class="creds" aria-label="Certifications">
+        <li><span>AWS Certified Security Specialty</span><span>AWS</span></li>
+        <li><span>AWS Certified Solutions Architect</span><span>AWS</span></li>
+        <li><span>AWS Certified DevOps Engineer Professional</span><span>AWS</span></li>
+        <li><span>Certified Kubernetes Administrator</span><span>CNCF</span></li>
+        <li><span>8 years in cloud and security</span><span>UK</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contact" aria-labelledby="contact-h">
+    <div class="wrap contact">
+      <div>
+        <span class="eyebrow">Start here</span>
+        <h2 id="contact-h" style="margin-top:14px">Two weeks from now, you could know exactly where you stand.</h2>
+        <p class="lede" style="margin-top:16px">A scoping call takes 30 minutes and carries no obligation. We confirm scope, timeline and a fixed price before anything starts.</p>
+        <ol>
+          <li>Scoping call</li>
+          <li>Written proposal with a fixed price</li>
+          <li>Agreement and read-only access</li>
+          <li>Assessment and report</li>
+          <li>Walkthrough, then optional follow-on</li>
+        </ol>
+      </div>
+      <div class="mailbox">
+        <h3>Book a scoping call</h3>
+        <p style="color:var(--ink-2)">Email a few times that suit you, the number of clusters you run, and any audit or customer deadline you are working towards.</p>
+        <div class="mail-row">
+          <span class="mail-addr" id="mail-addr">ade@clustersure.com</span>
+          <button class="copy" type="button" id="copy-mail">Copy</button>
+        </div>
+        <a class="btn btn-primary" href="mailto:ade@clustersure.com?subject=ClusterSure%3A%20scoping%20call" data-topic="Scoping call" style="justify-self:start">Email to book</a>
+        <small>Replies within one working day. Based in the United Kingdom.</small>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="band" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">FAQ</span>
+        <h2 id="faq-h">Frequently asked questions</h2>
+      </div>
+      <div class="faq">
+        <details><summary>What access do you need?</summary><p>A read-only IAM role in each AWS account in scope, created from a Terraform or CloudFormation template we provide, plus read-only cluster access mapped to that role. We never need write access to assess, and access is revoked at the end of the engagement.</p></details>
+        <details><summary>Do you install anything in our clusters?</summary><p>Not by default. Most checks run against the Kubernetes and AWS APIs from outside the cluster. If a node-level check such as kube-bench is useful, we agree it with you first and remove it afterwards.</p></details>
+        <details><summary>We are a health tech company. Can you map findings to the DSPT?</summary><p>Yes. Findings can be mapped to the NHS Data Security and Protection Toolkit, Cyber Essentials and ISO 27001, which together cover most of what NHS customers ask health tech suppliers for. Tell us which frameworks matter on the scoping call.</p></details>
+        <details><summary>How is the price set?</summary><p>By scope: the number of clusters and AWS accounts, and whether pipeline review is included. You get a fixed price in writing before any work starts, and it does not change unless you change the scope.</p></details>
+        <details><summary>What happens to our data?</summary><p>Scan output and evidence are stored encrypted, kept only for the engagement and an agreed retention period, then deleted. We are happy to sign your NDA or work under your data processing terms.</p></details>
+        <details><summary>We are not on EKS. Can you still help?</summary><p>The posture review is built for EKS, but IAM, pipeline security and evidence automation apply to any AWS estate. Ask on the call and we will tell you plainly whether it is a good fit.</p></details>
+        <details><summary>Can you fix what you find?</summary><p>Yes. A remediation sprint delivers the fixes as pull requests to your repositories, so your team reviews and owns every change.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>ClusterSure · Kubernetes security assurance · United Kingdom</span>
+    <span><a href="/.well-known/security.txt">security.txt</a> · <a href="#top">Back to top</a></span>
+  </div>
 </footer>
+
+<script src="/assets/discuss.js" defer></script>
+<script src="/assets/copy-mail.js" defer></script>
 </body>
 </html>

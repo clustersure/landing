@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="52 46 162 148" role="img" aria-label="ClusterSure">
+  <g fill="#18222E">
+    <circle cx="96" cy="88" r="22"/>
+    <circle cx="153" cy="69" r="15"/>
+    <circle cx="192" cy="111" r="18"/>
+    <circle cx="76" cy="147" r="16"/>
+    <circle cx="182" cy="169" r="14"/>
+  </g>
+  <circle cx="131" cy="143" r="38" fill="#12805C"/>
+  <path d="M112 145 l13 13 l25 -27" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
